@@ -1,0 +1,5 @@
+api_id: int
+api_hash: str
+
+phone_number: str
+session: str
