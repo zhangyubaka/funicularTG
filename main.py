@@ -64,8 +64,9 @@ async def get_history(client, entries, offset_id=0):
 
 async def main():
     me, client = await auth()
-    _,entries = await get_dialogs(client)
-    pprint(await get_history(client,entries))
+    _, entries = await get_dialogs(client)
+    pprint(await get_history(client, entries))
+
 
 if __name__ == '__main__':
     loop = uvloop.new_event_loop()
