@@ -54,16 +54,18 @@ async def get_dialogs(client) -> tuple:
 
 
 async def get_history(client, entries, offset_id=0):
+    logger.debug("Starting to gather history messages...")
     history = []
     for i in entries:
-        logger.debug("Getting history for id " + i.id)
+        logger.debug("Getting history for id " + repr(i.id))
         history.append(await client.get_message_history(entity=i, offset_id=offset_id))
     return history
 
 
 async def main():
     me, client = await auth()
-    
+    _,entries = await get_dialogs(client)
+    pprint(await get_history(client,entries))
 
 if __name__ == '__main__':
     loop = uvloop.new_event_loop()
