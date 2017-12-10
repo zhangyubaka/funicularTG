@@ -3,3 +3,7 @@ api_hash: str
 
 phone_number: str
 session: str
+
+proxy = bool
+proxyHost = "localhost"
+proxyPort = 8889

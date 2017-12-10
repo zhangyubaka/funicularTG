@@ -21,6 +21,7 @@ logger.addHandler(authLog)
 async def auth() -> tuple:
     if os.path.isfile(config.session):
         client = telethon.TelegramClient(config.session)
+        await client.connect()
         if client.is_connected():
             logger.debug("Assuming client is connected and good to go, returning.")
             me = await client.get_me()
