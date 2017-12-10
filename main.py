@@ -8,14 +8,12 @@ import os
 import socks
 from pprint import pprint
 import logging
+import coloredlogs
 
 logger = logging.getLogger(__name__)
+coloredlogs.install(level='DEBUG', logger=logger)
+
 logger.setLevel(logging.DEBUG)
-authLog = logging.StreamHandler()
-authLog.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-authLog.setFormatter(formatter)
-logger.addHandler(authLog)
 
 
 async def auth() -> tuple:
@@ -23,24 +21,24 @@ async def auth() -> tuple:
         client = telethon.TelegramClient(config.session)
         await client.connect()
         if client.is_connected():
-            logger.debug("Assuming client is connected and good to go, returning.")
+            logger.debug("Assuming client is connected and good to go, returning...")
             me = await client.get_me()
             return me, client
         else:
             raise Exception('Auth Failed')
     else:
         if config.proxy:
-            logger.debug("Connecting with proxy...")
+            logger.info("Connecting with proxy...")
             client = telethon.TelegramClient(session=config.session, api_id=config.api_id, api_hash=config.api_hash,
                                              proxy=(socks.SOCKS5, config.proxyHost, config.proxyPort))
         else:
-            logger.debug("Connecting...")
+            logger.info("Connecting...")
             client = telethon.TelegramClient(config.session, config.api_id, config.api_hash)
         await client.connect()
         if client.is_connected():
-            logger.debug("Sending auth code...")
+            logger.info("Sending auth code...")
             await client.send_code_request(config.phone_number)
-            logger.debug("Code sent!")
+            logger.info("Code sent!")
             me = await client.sign_in(config.phone_number, input('Enter auth code: '))
             return me, client
         else:
@@ -49,17 +47,18 @@ async def auth() -> tuple:
 
 async def get_dialogs(client) -> tuple:
     # dialogs = await client.get_dialogs(limit=None)
-    logger.debug("Getting dialogs...")
+    logger.info("Getting dialogs...")
     dialogs, entities = await client.get_dialogs()
     return dialogs, entities
 
 
 async def get_history(client, entries, offset_id=0):
-    logger.debug("Starting to gather history messages...")
+    logger.info("Starting to gather history messages...")
     history = []
     for i in entries:
         logger.debug("Getting history for id " + repr(i.id))
         history.append(await client.get_message_history(entity=i, offset_id=offset_id))
+    logger.info("Mission success!")
     return history
 
 
