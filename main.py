@@ -5,7 +5,6 @@ import uvloop
 import telethon
 import config
 import os
-import socks
 from pprint import pprint
 import logging
 import coloredlogs
@@ -43,14 +42,15 @@ async def auth() -> object:
             raise Exception('Auth Failed')
 
 
-async def get_dialogs(client, limit=10) -> tuple:
+async def get_dialogs(client: object, limit=10) -> tuple:
     # dialogs = await client.get_dialogs(limit=None)
     logger.info("Getting dialogs...")
     dialogs, entities = await client.get_dialogs(limit=limit)
+    assert isinstance(entities, object)
     return dialogs, entities
 
 
-async def get_history(client, entries, offset_id=0, limit=20) -> list:
+async def get_history(client: object, entries, offset_id=0, limit=20) -> list:
     logger.info("Starting to gather history messages...")
     history = []
     logger.debug("Starting from +repr(offset_id)")
