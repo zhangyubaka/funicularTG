@@ -6,3 +6,5 @@ session: str
 
 proxy = tuple
 eg: proxy = (socks.SOCKS5,"localhost",1080) Using PySocks
+
+limit = int # Set this to None to obtain all history

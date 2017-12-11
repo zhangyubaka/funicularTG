@@ -18,7 +18,8 @@ logger.setLevel(logging.DEBUG)
 
 async def auth() -> tuple:
     if os.path.isfile(config.session):  # Detect saved session file
-        client = telethon.TelegramClient(session=config.session,api_id=config.api_id,api_hash=config.api_hash,proxy=config.proxy)
+        client = telethon.TelegramClient(session=config.session, api_id=config.api_id, api_hash=config.api_hash,
+                                         proxy=config.proxy)
         await client.connect()
         if client.is_connected():
             logger.debug("Assuming client is connected and good to go, returning...")
@@ -28,7 +29,8 @@ async def auth() -> tuple:
             raise Exception('Auth Failed')
     else:
         logger.info("Connecting...")
-        client = telethon.TelegramClient(session=config.session, api_id=config.api_id, api_hash=config.api_hash,proxy=config.proxy)
+        client = telethon.TelegramClient(session=config.session, api_id=config.api_id, api_hash=config.api_hash,
+                                         proxy=config.proxy)
         await client.connect()
         if client.is_connected():
             logger.info("Sending auth code...")
@@ -41,28 +43,28 @@ async def auth() -> tuple:
             raise Exception('Auth Failed')
 
 
-async def get_dialogs(client) -> tuple:
+async def get_dialogs(client, limit=10) -> tuple:
     # dialogs = await client.get_dialogs(limit=None)
     logger.info("Getting dialogs...")
-    dialogs, entities = await client.get_dialogs()
+    dialogs, entities = await client.get_dialogs(limit=limit)
     return dialogs, entities
 
 
-async def get_history(client, entries, offset_id=0):
+async def get_history(client, entries, offset_id=0, limit=20):
     logger.info("Starting to gather history messages...")
     history = []
     logger.debug("Starting from +repr(offset_id)")
     for i in entries:
         logger.info("Getting history for id " + repr(i.id))
-        history.append(await client.get_message_history(entity=i, offset_id=offset_id))
+        history.append(await client.get_message_history(entity=i, offset_id=offset_id, limit=limit))
     logger.info("Mission success!")
     return history
 
 
 async def main():
     me, client = await auth()
-    _, entries = await get_dialogs(client)
-    pprint(await get_history(client, entries))
+    _, entries = await get_dialogs(client, limit=config.limit)
+    pprint(await get_history(client, entries, limit=config.limit))
 
 
 if __name__ == '__main__':
