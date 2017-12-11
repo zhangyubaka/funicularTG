@@ -8,6 +8,7 @@ import os
 from pprint import pprint
 import logging
 import coloredlogs
+import json
 
 logger = logging.getLogger(__name__)
 coloredlogs.install(level='DEBUG', logger=logger)
@@ -59,6 +60,9 @@ async def get_history(client: object, entries, offset_id=0, limit=20) -> list:
         history.append(await client.get_message_history(entity=i, offset_id=offset_id, limit=limit))
     logger.info("Mission success!")
     return history
+
+async def json_formatter(message):
+    pass
 
 
 async def main():
