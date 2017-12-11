@@ -61,8 +61,28 @@ async def get_history(client: object, entries, offset_id=0, limit=20) -> list:
     logger.info("Mission success!")
     return history
 
-async def json_formatter(message):
-    pass
+
+async def json_formatter(message, location='output', append=False):
+    # Get the absolute path.
+    abspath = os.path.abspath(os.path.join(os.path.dirname(__file__), location))
+    if append:
+        # If file is exist, append it.
+        open(abspath+'/'+message) # WIP
+    else:
+        pass
+
+
+async def name_formatter(entry):
+    # Try get the username for message.
+    name=''
+    if entry.firstname:
+        name += entry.firstname
+    if entry.lastname:
+        name += entry.lastname
+    if name == '':
+        name += 'User#'
+        name += entry.id
+    return name
 
 
 async def main():
