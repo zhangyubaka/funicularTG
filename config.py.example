@@ -4,6 +4,5 @@ api_hash: str
 phone_number: str
 session: str
 
-proxy = bool
-proxyHost = "localhost"
-proxyPort = 8889
+proxy = tuple
+eg: proxy = (socks.SOCKS5,"localhost",1080) Using PySocks

@@ -17,8 +17,8 @@ logger.setLevel(logging.DEBUG)
 
 
 async def auth() -> tuple:
-    if os.path.isfile(config.session):
-        client = telethon.TelegramClient(config.session)
+    if os.path.isfile(config.session):  # Detect saved session file
+        client = telethon.TelegramClient(session=config.session,api_id=config.api_id,api_hash=config.api_hash,proxy=config.proxy)
         await client.connect()
         if client.is_connected():
             logger.debug("Assuming client is connected and good to go, returning...")
@@ -27,19 +27,15 @@ async def auth() -> tuple:
         else:
             raise Exception('Auth Failed')
     else:
-        if config.proxy:
-            logger.info("Connecting with proxy...")
-            client = telethon.TelegramClient(session=config.session, api_id=config.api_id, api_hash=config.api_hash,
-                                             proxy=(socks.SOCKS5, config.proxyHost, config.proxyPort))
-        else:
-            logger.info("Connecting...")
-            client = telethon.TelegramClient(config.session, config.api_id, config.api_hash)
+        logger.info("Connecting...")
+        client = telethon.TelegramClient(session=config.session, api_id=config.api_id, api_hash=config.api_hash,proxy=config.proxy)
         await client.connect()
         if client.is_connected():
             logger.info("Sending auth code...")
             await client.send_code_request(config.phone_number)
             logger.info("Code sent!")
             me = await client.sign_in(config.phone_number, input('Enter auth code: '))
+            logger.debug("Logging in...")
             return me, client
         else:
             raise Exception('Auth Failed')
@@ -55,8 +51,9 @@ async def get_dialogs(client) -> tuple:
 async def get_history(client, entries, offset_id=0):
     logger.info("Starting to gather history messages...")
     history = []
+    logger.debug("Starting from +repr(offset_id)")
     for i in entries:
-        logger.debug("Getting history for id " + repr(i.id))
+        logger.info("Getting history for id " + repr(i.id))
         history.append(await client.get_message_history(entity=i, offset_id=offset_id))
     logger.info("Mission success!")
     return history
