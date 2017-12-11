@@ -16,7 +16,7 @@ coloredlogs.install(level='DEBUG', logger=logger)
 logger.setLevel(logging.DEBUG)
 
 
-async def auth() -> tuple:
+async def auth() -> object:
     if os.path.isfile(config.session):  # Detect saved session file
         client = telethon.TelegramClient(session=config.session, api_id=config.api_id, api_hash=config.api_hash,
                                          proxy=config.proxy)
@@ -50,7 +50,7 @@ async def get_dialogs(client, limit=10) -> tuple:
     return dialogs, entities
 
 
-async def get_history(client, entries, offset_id=0, limit=20):
+async def get_history(client, entries, offset_id=0, limit=20) -> list:
     logger.info("Starting to gather history messages...")
     history = []
     logger.debug("Starting from +repr(offset_id)")
