@@ -10,5 +10,5 @@ pip3 install -r requirements.txt
 ```
 
 # TODO
-[  ] Backup feature, using print for debug purpose for now.
-[  ] Formatter for pretty looking.
+[ ] Backup feature, using print for debug purpose for now.
+[ ] Formatter for pretty looking.
