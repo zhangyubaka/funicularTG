@@ -44,7 +44,7 @@ async def auth() -> object:
             raise Exception('Auth Failed')
 
 
-async def get_dialogs(client: object, limit=10) -> tuple:
+async def get_dialogs(client, limit=10) -> tuple:
     # dialogs = await client.get_dialogs(limit=None)
     logger.info("Getting dialogs...")
     dialogs, entities = await client.get_dialogs(limit=limit)
@@ -71,7 +71,8 @@ async def json_formatter(message, location='output', append=False) -> None:
         # If file is exist, append it.
     else:
         mode='a+'
-    with aiofiles.open(abspath + os.pathsep + message,mode='a+') as f:
+    with aiofiles.open(abspath + os.pathsep + message,mode=mode) as f:
+        json.dump(message,f)
 
 
 async def name_formatter(entry) -> str:
