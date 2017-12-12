@@ -62,19 +62,19 @@ async def get_history(client: object, entries, offset_id=0, limit=20) -> list:
     return history
 
 
-async def json_formatter(message, location='output', append=False):
+async def json_formatter(message, location='output', append=False) -> None:
     # Get the absolute path.
     abspath = os.path.abspath(os.path.join(os.path.dirname(__file__), location))
     if append:
         # If file is exist, append it.
-        open(abspath+'/'+message) # WIP
+        open(abspath + '/' + message)  # WIP
     else:
         pass
 
 
-async def name_formatter(entry):
+async def name_formatter(entry) -> str:
     # Try get the username for message.
-    name=''
+    name = ''
     if entry.firstname:
         name += entry.firstname
     if entry.lastname:
@@ -85,7 +85,7 @@ async def name_formatter(entry):
     return name
 
 
-async def main():
+async def main() -> None:
     me, client = await auth()
     _, entries = await get_dialogs(client, limit=config.limit)
     pprint(await get_history(client, entries, limit=config.limit))
