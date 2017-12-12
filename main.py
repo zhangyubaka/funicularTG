@@ -51,7 +51,7 @@ async def get_dialogs(client: object, limit=10) -> tuple:
     return dialogs, entities
 
 
-async def get_history(client: object, entries, offset_id=0, limit=20) -> list:
+async def get_history(client, entries, offset_id=0, limit=20) -> list:
     logger.info("Starting to gather history messages...")
     history = []
     logger.debug("Starting from +repr(offset_id)")
@@ -67,7 +67,7 @@ async def json_formatter(message, location='output', append=False) -> None:
     abspath = os.path.abspath(os.path.join(os.path.dirname(__file__), location))
     if append:
         # If file is exist, append it.
-        open(abspath + '/' + message)  # WIP
+        open(abspath + os.pathsep + message)  # WIP
     else:
         pass
 
