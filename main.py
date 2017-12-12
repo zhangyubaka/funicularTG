@@ -9,6 +9,7 @@ from pprint import pprint
 import logging
 import coloredlogs
 import json
+import aiofiles
 
 logger = logging.getLogger(__name__)
 coloredlogs.install(level='DEBUG', logger=logger)
@@ -66,10 +67,11 @@ async def json_formatter(message, location='output', append=False) -> None:
     # Get the absolute path.
     abspath = os.path.abspath(os.path.join(os.path.dirname(__file__), location))
     if append:
+        mode='ax'
         # If file is exist, append it.
-        open(abspath + os.pathsep + message)  # WIP
     else:
-        pass
+        mode='a+'
+    with aiofiles.open(abspath + os.pathsep + message,mode='a+') as f:
 
 
 async def name_formatter(entry) -> str:
