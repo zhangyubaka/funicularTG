@@ -96,7 +96,7 @@ async def main() -> None:
     _, entries = await get_dialogs(client, limit=config.limit)
     history,names = await get_history(client, entries, limit=config.limit)
     for i,j in history,names:
-        json_formatter(message=i,names=j)
+        json_formatter(message=i,name=j)
 
 
 
