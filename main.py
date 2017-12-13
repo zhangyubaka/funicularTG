@@ -5,7 +5,6 @@ import uvloop
 import telethon
 import config
 import os
-from pprint import pprint
 import logging
 import coloredlogs
 import json
@@ -73,7 +72,7 @@ async def json_formatter(message, name, location='output', append=False) -> None
         # If file is exist, append it.
     else:
         mode='a+'
-    with aiofiles.open(abspath + os.pathsep + ,mode=mode) as f:
+    with aiofiles.open(abspath + os.pathsep + name,mode=mode) as f:
         json.dump(message,f)
 
 
