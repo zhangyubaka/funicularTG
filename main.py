@@ -19,7 +19,8 @@ logger.setLevel(logging.DEBUG)
 async def auth() -> object:
     if os.path.isfile(config.session):  # Detect saved session file
         client = telethon.TelegramClient(session=config.session, api_id=config.api_id, api_hash=config.api_hash,
-                                         proxy=config.proxy)
+                                         proxy=config.proxy, use_ipv6=config.use_ipv6,
+                                         connection_mode=telethon.network.ConnectionMode.TCP_OBFUSCATED)
         await client.connect()
         if client.is_connected():
             logger.debug("Assuming client is connected and good to go, returning...")
@@ -30,7 +31,8 @@ async def auth() -> object:
     else:
         logger.info("Connecting...")
         client = telethon.TelegramClient(session=config.session, api_id=config.api_id, api_hash=config.api_hash,
-                                         proxy=config.proxy,use_ipv6=config.use_ipv6)
+                                         proxy=config.proxy, use_ipv6=config.use_ipv6,
+                                         connection_mode=telethon.network.ConnectionMode.TCP_OBFUSCATED)
         await client.connect()
         if client.is_connected():
             logger.info("Sending auth code...")
@@ -61,42 +63,41 @@ async def get_history(client, entries, offset_id=0, limit=20) -> tuple:
         history.append(await client.get_message_history(entity=i, offset_id=offset_id, limit=limit))
         names.append(await name_formatter(i))
     logger.info("Mission success!")
-    return history,names
+    return history, names
 
 
 async def json_formatter(message, name, location='output', append=False) -> None:
     # Get the absolute path.
     abspath = os.path.abspath(os.path.join(os.path.dirname(__file__), location))
     if append:
-        mode='ax'
+        mode = 'ax'
         # If file is exist, append it.
     else:
-        mode='a+'
-    with aiofiles.open(abspath + os.pathsep + name,mode=mode) as f:
-        json.dump(message,f)
+        mode = 'a+'
+    with aiofiles.open(abspath + os.pathsep + name, mode=mode) as f:
+        json.dump(message, f)
 
 
 async def name_formatter(entry) -> str:
     # Try get the username for message.
     name = ''
-    if entry.firstname:
-        name += entry.firstname
-    if entry.lastname:
-        name += entry.lastname
+    if entry.first_name:
+        name += entry.first_name
+    if entry.last_name:
+        name += entry.last_name
     if name == '':
         name += 'User#'
         name += entry.id
-    logger.debug('Username is '+name)
+    logger.debug('Username is ' + name)
     return name
 
 
 async def main() -> None:
     me, client = await auth()
     _, entries = await get_dialogs(client, limit=config.limit)
-    history,names = await get_history(client, entries, limit=config.limit)
-    for i,j in history,names:
-        json_formatter(message=i,name=j)
-
+    history, names = await get_history(client, entries, limit=config.limit)
+    for i, j in history, names:
+        json_formatter(message=i, name=j)
 
 
 if __name__ == '__main__':
