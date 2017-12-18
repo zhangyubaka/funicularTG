@@ -75,6 +75,8 @@ async def json_formatter(message, name, location='output', append=False) -> None
     else:
         mode = 'a+'
     with aiofiles.open(abspath + os.pathsep + name, mode=mode) as f:
+        logger.info("Save to " + abspath + os.pathsep + name)
+        logger.info("Using " + mode + " mode")
         json.dump(message, f)
 
 
@@ -87,7 +89,7 @@ async def name_formatter(entry) -> str:
         name += entry.last_name
     if name == '':
         name += 'User#'
-        name += entry.id
+        name += str(entry.id)  # Fix type conversion
     logger.debug('Username is ' + name)
     return name
 
