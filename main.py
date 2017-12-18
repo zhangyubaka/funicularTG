@@ -57,7 +57,7 @@ async def get_history(client, entries, offset_id=0, limit=20) -> tuple:
     logger.info("Starting to gather history messages...")
     history = []
     names = []
-    logger.debug("Starting from +repr(offset_id)")
+    logger.debug("Starting from " + repr(offset_id))
     for i in entries:
         logger.info("Getting history for id " + repr(i.id))
         history.append(await client.get_message_history(entity=i, offset_id=offset_id, limit=limit))
@@ -75,7 +75,7 @@ async def json_formatter(message, name, location='output', append=False) -> None
     else:
         mode = 'a+'
     with aiofiles.open(abspath + os.pathsep + name, mode=mode) as f:
-        logger.info("Save to " + abspath + os.pathsep + name)
+        logger.info("Saving to " + abspath + os.pathsep + name)
         logger.info("Using " + mode + " mode")
         json.dump(message, f)
 
