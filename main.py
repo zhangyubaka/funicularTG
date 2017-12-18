@@ -30,7 +30,7 @@ async def auth() -> object:
     else:
         logger.info("Connecting...")
         client = telethon.TelegramClient(session=config.session, api_id=config.api_id, api_hash=config.api_hash,
-                                         proxy=config.proxy)
+                                         proxy=config.proxy,use_ipv6=config.use_ipv6)
         await client.connect()
         if client.is_connected():
             logger.info("Sending auth code...")
